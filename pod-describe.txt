@@ -1,0 +1,62 @@
+Name:           postgresql-sonar-2-dr4fp
+Namespace:      cicd-tools
+Node:           tdbsbcsvr543/
+Start Time:     Mon, 03 Sep 2018 14:40:05 -0300
+Labels:         app=sonarqube
+                deployment=postgresql-sonar-2
+                deploymentconfig=postgresql-sonar
+                name=postgresql-sonar
+Annotations:    openshift.io/deployment-config.latest-version=2
+                openshift.io/deployment-config.name=postgresql-sonar
+                openshift.io/deployment.name=postgresql-sonar-2
+                openshift.io/generated-by=OpenShiftNewApp
+                openshift.io/scc=restricted
+Status:         Pending
+IP:             
+Controlled By:  ReplicationController/postgresql-sonar-2
+Containers:
+  postgresql:
+    Container ID:   
+    Image:          registry.access.redhat.com/rhscl/postgresql-96-rhel7@sha256:0580cb19326bd96538a7e03cf4d3c6fcb745440f06d655dc3137921320a3d51d
+    Image ID:       
+    Port:           5432/TCP
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      memory:  512Mi
+    Requests:
+      memory:   512Mi
+    Liveness:   exec [/bin/sh -i -c pg_isready -h 127.0.0.1 -p 5432] delay=30s timeout=1s period=10s #success=1 #failure=3
+    Readiness:  exec [/bin/sh -i -c psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'] delay=5s timeout=1s period=10s #success=1 #failure=3
+    Environment:
+      POSTGRESQL_USER:      <set to the key 'database-user' in secret 'postgresql-sonar'>      Optional: false
+      POSTGRESQL_PASSWORD:  <set to the key 'database-password' in secret 'postgresql-sonar'>  Optional: false
+      POSTGRESQL_DATABASE:  <set to the key 'database-name' in secret 'postgresql-sonar'>      Optional: false
+    Mounts:
+      /var/lib/pgsql/data from postgresql-sonar-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-jb2mb (ro)
+Conditions:
+  Type           Status
+  Initialized    True 
+  Ready          False 
+  PodScheduled   True 
+Volumes:
+  postgresql-sonar-data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  postgresql-sonar
+    ReadOnly:   false
+  default-token-jb2mb:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-jb2mb
+    Optional:    false
+QoS Class:       Burstable
+Node-Selectors:  region=primary
+Tolerations:     node.kubernetes.io/memory-pressure:NoSchedule
+Events:
+  Type     Reason                 Age               From                   Message
+  ----     ------                 ----              ----                   -------
+  Normal   SuccessfulMountVolume  12m               kubelet, tdbsbcsvr543  MountVolume.SetUp succeeded for volume "default-token-jb2mb"
+  Normal   Scheduled              10m               default-scheduler      Successfully assigned postgresql-sonar-2-dr4fp to tdbsbcsvr543
+  Warning  FailedMount            3m (x4 over 10m)  kubelet, tdbsbcsvr543  Unable to mount volumes for pod "postgresql-sonar-2-dr4fp_cicd-tools(b9971913-afa0-11e8-b09a-0050568b5dca)": timeout expired waiting for volumes to attach/mount for pod "cicd-tools"/"postgresql-sonar-2-dr4fp". list of unattached/unmounted volumes=[postgresql-sonar-data]
